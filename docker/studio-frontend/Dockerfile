@@ -1,6 +1,5 @@
 FROM node:20-bookworm-slim
 
-ARG STUDIO_REV=eb52643b62429ee1a3f94e94ef06f38fc13dfcbb
 ARG BACKEND_URL=http://backend:8001
 ENV NODE_ENV=production \
     NEXT_TELEMETRY_DISABLED=1 \
@@ -9,13 +8,10 @@ ENV NODE_ENV=production \
     PORT=3000 \
     HOSTNAME=0.0.0.0
 
-RUN apt-get update && apt-get install -y --no-install-recommends git \
-    && rm -rf /var/lib/apt/lists/* \
-    && git clone https://github.com/Heroesjouney/AIMovieStudiov2.git /src/studio \
-    && git -C /src/studio checkout --detach "${STUDIO_REV}"
-
 WORKDIR /src/studio/frontend
+COPY vendor/AIMovieStudiov2/frontend/package.json vendor/AIMovieStudiov2/frontend/package-lock.json* ./
 RUN npm ci --include=dev || npm install --include=dev
+COPY vendor/AIMovieStudiov2/frontend ./
 RUN npm run build
 
 EXPOSE 3000

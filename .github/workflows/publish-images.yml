@@ -48,6 +48,18 @@ jobs:
       TAG: ${{ inputs.tag || 'edge' }}
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: Comfy-Org/ComfyUI
+          ref: b5cc8830279eae909a59de030af1e50761c36751
+          path: vendor/ComfyUI
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: Heroesjouney/AIMovieStudiov2
+          ref: eb52643b62429ee1a3f94e94ef06f38fc13dfcbb
+          path: vendor/AIMovieStudiov2
+          persist-credentials: false
       - uses: docker/login-action@v3
         with:
           registry: ${{ env.REGISTRY }}

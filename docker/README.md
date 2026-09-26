@@ -6,7 +6,7 @@ This builds three **software-only** Linux images:
 - `film-studio-backend`: pinned AI Movie Studio 2 backend and its H3 workflow patched to the compatible fp8 Ref2VA file.
 - `film-studio-frontend`: pinned AI Movie Studio 2 UI.
 
-The H3 weights are intentionally absent. At runtime `film-comfy` downloads the four required Ref2VA files to a Docker volume and verifies their byte sizes. Publishing model weights in the image would add about 42 GB to every image transfer and may introduce redistribution-license obligations.
+The H3 weights are intentionally absent. At runtime `film-comfy` downloads the four required Ref2VA files to a Docker volume and verifies their byte sizes. Publishing model weights in the image would add about 42 GB to every image transfer and may introduce redistribution-license obligations. The GitHub workflow checks out pinned ComfyUI and AI Movie Studio source revisions before each build; Dockerfiles do not clone external repositories themselves.
 
 ## Recommended: build on GitHub Actions
 
