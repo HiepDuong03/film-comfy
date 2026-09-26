@@ -110,7 +110,10 @@ jobs:
           file: ${{ matrix.dockerfile }}
           platforms: linux/amd64
           push: true
-          provenance: mode=min
+          # Ckey's custom-template validator expects a classic single-platform
+          # Docker manifest and rejects the OCI index emitted with attestations.
+          provenance: false
+          sbom: false
           tags: |
             ${{ env.REGISTRY }}/${{ needs.prepare.outputs.image_owner }}/${{ matrix.image }}:${{ env.TAG }}
             docker.io/${{ secrets.DOCKERHUB_USERNAME }}/film-ckey-probe:${{ env.TAG }}
