@@ -16,6 +16,8 @@ WORKDIR /src/studio/backend
 COPY vendor/AIMovieStudiov2/backend/requirements.txt ./
 RUN pip install --upgrade pip && pip install -r requirements.txt
 COPY vendor/AIMovieStudiov2/backend ./
+COPY docker/studio-backend/patch_comfy_public_url.py /tmp/patch_comfy_public_url.py
+RUN python /tmp/patch_comfy_public_url.py core/drivers/comfy_video.py
 RUN sed -i 's/minimax_h3_ref2va_pruned_int8_convrot\.safetensors/minimax_h3_ref2va_pruned_fp8_scaled.safetensors/g' core/workflows/minimax_h3_r2v.json
 
 EXPOSE 8001

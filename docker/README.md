@@ -59,10 +59,12 @@ The first `comfy` start downloads H3 into `model-data`; later restarts on the sa
 On Windows:
 
 ```powershell
-ssh -L 3000:127.0.0.1:3000 root@CKEY_IP -p CKEY_PORT
+ssh -N -L 3000:127.0.0.1:3000 -L 8188:127.0.0.1:8188 root@CKEY_IP -p CKEY_PORT
 ```
 
-Open `http://127.0.0.1:3000`. ComfyUI port 8188 is also loopback-only and is not public.
+Open `http://127.0.0.1:3000`. The `8188` forward is required so generated video
+preview links work in your browser. ComfyUI port 8188 is still loopback-only on
+the Ckey machine and is not public.
 
 ## Before spending a full render hour
 

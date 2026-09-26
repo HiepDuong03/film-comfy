@@ -31,10 +31,11 @@ The default model uses the compatible `fp8_scaled` Ref2VA transformer, `nvfp4_aw
 The AI Movie Studio Compose file binds its UI to loopback. From your own computer, use an SSH tunnel:
 
 ```bash
-ssh -L 3000:127.0.0.1:3000 root@<Ckey-IP> -p <Ckey-SSH-port>
+ssh -N -L 3000:127.0.0.1:3000 -L 8188:127.0.0.1:8188 root@<Ckey-IP> -p <Ckey-SSH-port>
 ```
 
-Then open `http://127.0.0.1:3000`. Keep ComfyUI port 8188 private.
+Then open `http://127.0.0.1:3000`. The second forward lets Studio previews load
+rendered videos from ComfyUI; port 8188 remains private on the Ckey machine.
 
 ## Important filmmaking limitation
 

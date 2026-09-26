@@ -18,7 +18,11 @@ services:
   backend:
     image: ${REGISTRY:?Set REGISTRY in .env}/film-studio-backend:${TAG:-v1}
     environment:
+      # Docker-only endpoint used by the backend for API calls and uploads.
       COMFY_URL: http://comfy:8188
+      # Browser-reachable endpoint used only in generated output-video links.
+      # It is exposed locally through the SSH tunnel documented in the README.
+      COMFY_PUBLIC_URL: http://127.0.0.1:8188
     volumes:
       - studio-assets:/src/studio/backend/assets
     depends_on:
