@@ -1,0 +1,12 @@
+.git
+**/.DS_Store
+**/__pycache__
+**/.pytest_cache
+**/models
+**/output
+**/input
+*.safetensors
+*.ckpt
+*.pt
+*.pth
+*.zip

@@ -1,0 +1,43 @@
+services:
+  comfy:
+    image: ${REGISTRY:?Set REGISTRY in .env}/film-comfy:${TAG:-v1}
+    gpus: all
+    environment:
+      HF_TOKEN: ${HF_TOKEN:-}
+      HF_XET_HIGH_PERFORMANCE: ${HF_XET_HIGH_PERFORMANCE:-1}
+      DOWNLOAD_MODELS: "1"
+    volumes:
+      - model-data:/opt/ComfyUI/models
+      - hf-cache:/data/huggingface
+      - comfy-output:/opt/ComfyUI/output
+      - comfy-input:/opt/ComfyUI/input
+    ports:
+      - "127.0.0.1:8188:8188"
+    restart: unless-stopped
+
+  backend:
+    image: ${REGISTRY:?Set REGISTRY in .env}/film-studio-backend:${TAG:-v1}
+    environment:
+      COMFY_URL: http://comfy:8188
+    volumes:
+      - studio-assets:/src/studio/backend/assets
+    depends_on:
+      comfy:
+        condition: service_started
+    restart: unless-stopped
+
+  frontend:
+    image: ${REGISTRY:?Set REGISTRY in .env}/film-studio-frontend:${TAG:-v1}
+    ports:
+      - "127.0.0.1:3000:3000"
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  model-data:
+  hf-cache:
+  comfy-output:
+  comfy-input:
+  studio-assets:
