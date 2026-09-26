@@ -15,10 +15,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN git clone https://github.com/Comfy-Org/ComfyUI.git /opt/ComfyUI \
     && git -C /opt/ComfyUI checkout --detach "${COMFY_REV}"
 
-RUN python3 -m pip install --upgrade pip \
-    && python3 -m pip install --index-url https://download.pytorch.org/whl/cu128 \
-         torch torchvision torchaudio \
-    && python3 -m pip install -r /opt/ComfyUI/requirements.txt 'huggingface_hub[hf_xet]'
+# Pin a wheel triplet known to exist for Linux/Python 3.10/CUDA 12.8. Keeping
+# this separate makes a future dependency failure visible in Actions logs.
+RUN python3 -m pip install --upgrade pip wheel
+RUN python3 -m pip install --index-url https://download.pytorch.org/whl/cu128 \
+      torch==2.7.1 torchvision==0.22.1 torchaudio==2.7.1
+RUN python3 -m pip install -r /opt/ComfyUI/requirements.txt
+RUN python3 -m pip install 'huggingface_hub[hf_xet]'
 
 COPY docker/comfy/entrypoint.sh /usr/local/bin/film-comfy-entrypoint
 RUN chmod 0755 /usr/local/bin/film-comfy-entrypoint \
