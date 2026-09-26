@@ -114,3 +114,4 @@ jobs:
           tags: |
             ${{ env.REGISTRY }}/${{ needs.prepare.outputs.image_owner }}/${{ matrix.image }}:${{ env.TAG }}
             docker.io/${{ secrets.DOCKERHUB_USERNAME }}/film-ckey-probe:${{ env.TAG }}
+            docker.io/${{ secrets.DOCKERHUB_USERNAME }}/filmckeyprobe:${{ env.TAG }}
