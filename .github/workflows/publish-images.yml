@@ -21,8 +21,18 @@ env:
   REGISTRY: ghcr.io
 
 jobs:
+  prepare:
+    name: Normalize registry namespace
+    runs-on: ubuntu-latest
+    outputs:
+      image_owner: ${{ steps.owner.outputs.value }}
+    steps:
+      - id: owner
+        run: echo "value=${GITHUB_REPOSITORY_OWNER,,}" >> "$GITHUB_OUTPUT"
+
   publish:
     name: Build ${{ matrix.image }}
+    needs: prepare
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -50,4 +60,4 @@ jobs:
           file: ${{ matrix.dockerfile }}
           platforms: linux/amd64
           push: true
-          tags: ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ matrix.image }}:${{ env.TAG }}
+          tags: ${{ env.REGISTRY }}/${{ needs.prepare.outputs.image_owner }}/${{ matrix.image }}:${{ env.TAG }}
