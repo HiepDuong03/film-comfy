@@ -1,5 +1,13 @@
 # Portable Ckey Film Docker images
 
+## Ckey Custom Template probe
+
+Before publishing an all-in-one runtime, deploy the small
+`ghcr.io/YOUR_GITHUB_USER/film-ckey-probe:edge` image as a Ckey Custom Template
+and expose container port `3000`. Opening `/health` must return `ok: true` and
+the allocated GPU name. This verifies custom-registry pulling, the image
+entrypoint, port routing, and NVIDIA passthrough without downloading H3.
+
 This builds three **software-only** Linux images:
 
 - `film-comfy`: pinned ComfyUI, CUDA PyTorch, Hugging Face Xet and a resumable H3 downloader.

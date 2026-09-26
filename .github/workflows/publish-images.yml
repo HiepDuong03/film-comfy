@@ -48,6 +48,8 @@ jobs:
             dockerfile: docker/studio-backend/Dockerfile
           - image: film-studio-frontend
             dockerfile: docker/studio-frontend/Dockerfile
+          - image: film-ckey-probe
+            dockerfile: docker/ckey-probe/Dockerfile
     env:
       TAG: ${{ inputs.tag || 'edge' }}
     steps:
@@ -60,7 +62,7 @@ jobs:
           path: vendor/ComfyUI
           persist-credentials: false
       - uses: actions/checkout@v4
-        if: matrix.image != 'film-comfy'
+        if: startsWith(matrix.image, 'film-studio-')
         with:
           repository: Heroesjouney/AIMovieStudiov2
           ref: eb52643b62429ee1a3f94e94ef06f38fc13dfcbb
