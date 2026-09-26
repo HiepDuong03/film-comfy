@@ -17,6 +17,10 @@ permissions:
   contents: read
   packages: write
 
+concurrency:
+  group: publish-film-images-${{ github.ref }}
+  cancel-in-progress: true
+
 env:
   REGISTRY: ghcr.io
 
@@ -49,17 +53,33 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/checkout@v4
+        if: matrix.image == 'film-comfy'
         with:
           repository: Comfy-Org/ComfyUI
           ref: b5cc8830279eae909a59de030af1e50761c36751
           path: vendor/ComfyUI
           persist-credentials: false
       - uses: actions/checkout@v4
+        if: matrix.image != 'film-comfy'
         with:
           repository: Heroesjouney/AIMovieStudiov2
           ref: eb52643b62429ee1a3f94e94ef06f38fc13dfcbb
           path: vendor/AIMovieStudiov2
           persist-credentials: false
+      - name: Reclaim runner disk for CUDA image
+        if: matrix.image == 'film-comfy'
+        shell: bash
+        run: |
+          echo 'Disk before cleanup:'
+          df -h /
+          for target in /usr/local/lib/android /usr/share/dotnet /opt/ghc /usr/local/.ghcup; do
+            if [[ -d "$target" ]]; then
+              sudo rm -rf -- "$target"
+            fi
+          done
+          docker system prune --all --force
+          echo 'Disk after cleanup:'
+          df -h /
       - uses: docker/login-action@v3
         with:
           registry: ${{ env.REGISTRY }}
@@ -72,4 +92,5 @@ jobs:
           file: ${{ matrix.dockerfile }}
           platforms: linux/amd64
           push: true
+          provenance: mode=min
           tags: ${{ env.REGISTRY }}/${{ needs.prepare.outputs.image_owner }}/${{ matrix.image }}:${{ env.TAG }}

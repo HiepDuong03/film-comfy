@@ -1,7 +1,7 @@
 # Software-only image. Model weights are deliberately downloaded to a runtime volume.
 # Official Linux/CUDA 12.8 runtime with a tested PyTorch wheel already installed.
 # This avoids resolving a several-GB wheel dependency tree during every CI build.
-FROM pytorch/pytorch:2.7.1-cuda12.8-cudnn9-runtime
+FROM pytorch/pytorch:2.7.1-cuda12.8-cudnn9-runtime@sha256:c16f4c749e2d9e96878875cdf6cc45cddda1d1a36fddd371dd6f2360f1b6e2a2
 
 ENV DEBIAN_FRONTEND=noninteractive \
     PIP_NO_CACHE_DIR=1 \
@@ -15,9 +15,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 COPY vendor/ComfyUI /opt/ComfyUI
 
-RUN python -m pip install --upgrade pip wheel
-RUN python -m pip install -r /opt/ComfyUI/requirements.txt
-RUN python -m pip install 'huggingface_hub[hf_xet]'
+RUN python -m pip install --no-cache-dir --upgrade pip wheel \
+    && python -m pip install --no-cache-dir -r /opt/ComfyUI/requirements.txt \
+    && python -m pip install --no-cache-dir 'huggingface_hub[hf_xet]'
 
 COPY docker/comfy/entrypoint.sh /usr/local/bin/film-comfy-entrypoint
 RUN chmod 0755 /usr/local/bin/film-comfy-entrypoint \
